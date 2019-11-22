@@ -4,20 +4,42 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    index: './src/index.js'
+    index: './src/index.tsx'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.css', '.scss'],
   },
   module:{
     rules:[
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(js|jsx|tsx)$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+          options:{
+            cacheDirectory:true,
+            plugins: [
+              [
+                '@babel/transform-runtime',
+                {
+                  regenerator: true
+                }
+              ]
+            ]
+          },
+
+        }
       }
     ],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Test Page'
+      template: path.resolve(__dirname,'../src/index.html')
     })
   ],
   output: {
